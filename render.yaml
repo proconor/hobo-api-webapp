@@ -1,0 +1,7 @@
+services: 
+"  - type: web" 
+"    name: hobo-api-webapp" 
+"    env: python" 
+"    buildCommand: pip install -r requirements.txt" 
+"    startCommand: python hobo_api_webapp.py" 
+"    plan: free" 
