@@ -1,14 +1,17 @@
+
 from flask import Flask, request, render_template_string
 import requests
 import pandas as pd
+import os
 
 # Configuration
-BEARER_TOKEN = "4QwVfmPiGf4NMpAIEWp6phks307DZ41UdsvguBOKOeJMCBs8"
-LOGGER_SN = "20777720"
+BEARER_TOKEN = "4QwVfmPiGf4NMpAIEWp6phks307DZ41UdsvguBOKOeJMCBs8"  # Replace with your actual HOBOlink API token
+LOGGER_SN = "20777720"                 # Replace with your actual logger serial number
 BASE_URL = "https://api.hobolink.licor.cloud/v1/data"
 
 app = Flask(__name__)
 
+# Function to fetch data from HOBOlink API
 def fetch_data(start_date, end_date):
     headers = {
         "Authorization": f"Bearer {BEARER_TOKEN}",
@@ -26,6 +29,7 @@ def fetch_data(start_date, end_date):
     else:
         return f"Error {response.status_code}: {response.text}"
 
+# HTML template
 HTML = """
 <!doctype html>
 <title>HOBOlink Weather</title>
@@ -43,6 +47,7 @@ HTML = """
 {% endif %}
 """
 
+# Flask routes
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -57,8 +62,7 @@ def index():
             return render_template_string(HTML, table=None, error=result)
     return render_template_string(HTML)
 
+# Run on Render-compatible port
 if __name__ == "__main__":
-import os
-port = int(os.environ.get("PORT", 5000))
-app.run(host="0.0.0.0", port=port)
-
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
